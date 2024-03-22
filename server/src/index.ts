@@ -4,7 +4,7 @@ import { handleMessage } from './bot.js';
 import { validateData } from './validator.js';
 
 const app = express();
-const token = 'TelegramBotCode';
+const token = '6851417339:AAF227OwFeDmT2VD9DqoropdL_oMGaOSP_Q';
 const bot = new TelegramBot(token, { polling: true });
 
 app.use(express.json());
@@ -17,15 +17,24 @@ bot.onText(/\/start/, (msg) => {
     \.negativ: <нежелательные слова>
     \.w: <ширина>
     \.h: <высота>
+    \.seed: <сид>
 
     Например:
     \.prompt: house, tree
     \.negativ: cat, dog
     \.w: 800
     \.h: 600
+    \.seed: -1 по умолчанию (случайная генерация)
 
-Пожалуйста, используйте только латинские символы.`;
 
+Пожалуйста, используйте только латинские символы.
+Рекомендую использовать такие размеры изображений:
+    512 × 512  <по умолчанию>
+    768 × 768
+    512 × 1024
+    768 × 1024
+    1024 × 768
+`;
     bot.sendMessage(msg.chat.id, syntaxMessage);
 });
 
