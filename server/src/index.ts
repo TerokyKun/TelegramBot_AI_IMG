@@ -4,7 +4,7 @@ import { handleMessage } from './bot.js';
 import { validateData } from './validator.js';
 
 const app = express();
-const token = '6851417339:AAF227OwFeDmT2VD9DqoropdL_oMGaOSP_Q';
+const token = 'Telegram_Bot_Code';
 const bot = new TelegramBot(token, { polling: true });
 
 app.use(express.json());
