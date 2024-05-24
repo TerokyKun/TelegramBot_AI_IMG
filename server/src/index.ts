@@ -1,55 +1,60 @@
 import express from 'express';
 import TelegramBot from 'node-telegram-bot-api';
 import { handleMessage } from './bot.js';
-import { validateData } from './validator.js';
+import { sendHelpMessage, sendFormatMessage, sendModelMenu } from './funt.js'
+process.env.NTBA_FIX_350 = 'true';
 
 const app = express();
-const token = 'Telegram_Bot_Code';
+const token = 'token'; // Замените на ваш токен
 const bot = new TelegramBot(token, { polling: true });
 
 app.use(express.json());
 
-// Обработчик команды /start
+const menuKeyboard = {
+    reply_markup: {
+        keyboard: [
+            [{ text: 'Модели', callback_data: '/model' }, { text: 'Форматы', callback_data: '/format' }],
+            [{ text: 'Краткое обучение', callback_data: '/help' }]
+        ],
+        resize_keyboard: true
+    }
+};
+
 bot.onText(/\/start/, (msg) => {
     const syntaxMessage = `
-    Для генерации изображения используйте следующий синтаксис:
-    \.prompt: <промпт>
-    \.negativ: <нежелательные слова>
-    \.w: <ширина>
-    \.h: <высота>
-    \.seed: <сид>
+    Привет! Добро пожаловать. Teroky_Ai бот, который создает из текстового запроса уникальное изображение!
 
-    Например:
-    \.prompt: house, tree
-    \.negativ: cat, dog
-    \.w: 800
-    \.h: 600
-    \.seed: -1 по умолчанию (случайная генерация)
+    Хотите начать?
 
-
-Пожалуйста, используйте только латинские символы.
-Рекомендую использовать такие размеры изображений:
-    512 × 512  <по умолчанию>
-    768 × 768
-    512 × 1024
-    768 × 1024
-    1024 × 768
-`;
-    bot.sendMessage(msg.chat.id, syntaxMessage);
+    Просто напишите объект, который вы хотели бы увидеть, а затем опишите его внешность, стиль и любые дополнительные детали, которые приходят вам в голову.
+    `;
+    bot.sendMessage(msg.chat.id, syntaxMessage, {
+        reply_markup: {
+        keyboard: [
+                [{ text: 'Модели', callback_data: '/model' }, { text: 'Форматы', callback_data: '/format' }],
+                [{ text: 'Краткое обучение', callback_data: '/help' }]
+            ]
+        }
+    });
 });
 
+bot.onText(/\/model/, (msg) => {
+    sendModelMenu(bot, msg.chat.id);
+});
 
-// Обработчик сообщений
+bot.onText(/\/format/, (msg) => {
+    sendFormatMessage(bot, msg.chat.id);
+});
+
+bot.onText(/\/help/, (msg) => {
+    sendHelpMessage(bot, msg.chat.id);
+});
+
 bot.on('message', (msg) => {
     handleMessage(bot, msg);
 });
 
-
-
-
-
-
-app.listen(4000, (err) => {
+app.listen(2831, (err) => {
     if (err) {
         return console.log('Server error 👀', '\n', err);
     }
